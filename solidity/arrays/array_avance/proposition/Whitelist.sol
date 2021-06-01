@@ -13,11 +13,12 @@ contract Whitelist {
 
     Person[] public persons;
 
-    function add(string _name, uint _age) public {
-        persons.push(Person(_name, _age));
+    function add(string memory _name, uint _age) public {
+        Person memory person = Person(_name, _age);
+        persons.push(person);
     }
 
-    function remove(string _name, uint _age) public {
+    function remove() public {
         persons.pop();
     }
 }

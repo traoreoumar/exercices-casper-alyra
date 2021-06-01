@@ -11,7 +11,7 @@ contract Whitelist {
         uint age;
     }
 
-    function addPerson(string _name, uint _age) public {
-        Person(_name, _age);
+    function addPerson(string memory _name, uint _age) public pure {
+        Person memory person = Person(_name, _age);
     }
 }
