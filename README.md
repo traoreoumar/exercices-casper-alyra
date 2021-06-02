@@ -14,3 +14,6 @@
 - [Whitelist](solidity/whitelist)
 - [Variable spéciale](solidity/variable_speciale)
 - [msg.sender](solidity/msg.sender)
+- [Banque décentralisée](solidity/banque_decentralisee)
+- [keccak256](solidity/keccak256)
+- [Système d'administration](solidity/systeme_administration)
