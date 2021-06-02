@@ -8,7 +8,7 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/solc-0.6/con
  */
 contract Admin is Ownable {
     mapping(address => addressStatus) private mappingAdressStatus;
-    event Authorized(address _address);
+    event Whitelisted(address _address);
     event Blacklisted(address _address);
     enum addressStatus {
         Default,
@@ -18,7 +18,7 @@ contract Admin is Ownable {
 
     function whitelist(address _address) public onlyOwner {
         mappingAdressStatus[_address] = addressStatus.Whitelist;
-        emit Authorized(_address);
+        emit Whitelisted(_address);
     }
 
     function blacklist(address _address) public onlyOwner {
