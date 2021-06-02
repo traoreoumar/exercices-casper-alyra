@@ -11,3 +11,4 @@
 - [Array avancé](solidity/arrays/array_avance)
 - [Events](solidity/events)
 - [Type et visibilité des fonctions](solidity/type_et_visibilite_des_fonctions)
+- [Whitelist](solidity/whitelist)
