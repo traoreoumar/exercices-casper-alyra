@@ -12,3 +12,4 @@
 - [Events](solidity/events)
 - [Type et visibilité des fonctions](solidity/type_et_visibilite_des_fonctions)
 - [Whitelist](solidity/whitelist)
+- [Variable spéciale](solidity/variable_speciale)
