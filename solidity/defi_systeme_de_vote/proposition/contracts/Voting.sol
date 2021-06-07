@@ -41,6 +41,7 @@ contract Voting is Ownable {
     event WorkflowStatusChange(WorkflowStatus previousStatus, WorkflowStatus newStatus);
 
     uint private winningProposalId;
+    uint private winningProposalVoteCount;
 
     mapping(address => Voter) public voters;
     mapping(uint => Proposal) public proposals;
@@ -154,6 +155,11 @@ contract Voting is Ownable {
 
         proposals[_proposalId].voteCount++;
 
+        if (winningProposalVoteCount < proposals[_proposalId].voteCount) {
+            winningProposalVoteCount = proposals[_proposalId].voteCount;
+            winningProposalId = _proposalId;
+        }
+
         emit Voted(msg.sender, _proposalId);
     }
 
@@ -175,15 +181,6 @@ contract Voting is Ownable {
      */
     function tallyVotes() external onlyOwner {
         require(status == WorkflowStatus.VotingSessionEnded, "Voting session is not closed");
-
-        uint winningProposalVoteCount;
-        for (uint i = 0; i < arrayProposalIds.length; i++) {
-            if (winningProposalVoteCount <= proposals[arrayProposalIds[i]].voteCount) {
-                winningProposalVoteCount = proposals[arrayProposalIds[i]].voteCount;
-                winningProposalId = arrayProposalIds[i];
-            }
-        }
-
         status = WorkflowStatus.VotesTallied;
 
         emit VotesTallied();

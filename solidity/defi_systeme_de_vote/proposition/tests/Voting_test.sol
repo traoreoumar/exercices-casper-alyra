@@ -483,9 +483,11 @@ contract VotingSuite10WinningProposalDescription is AbstractVotingSuite {
         votingToTest.addVoter(address(this));
         votingToTest.openProposalRegistrationSession();
         votingToTest.addProposal("Proposal 1 description");
+        votingToTest.addProposal("Proposal 2 description");
+        votingToTest.addProposal("Proposal 3 description");
         votingToTest.closeProposalRegistrationSession();
         votingToTest.openVotingSession();
-        votingToTest.vote(1);
+        votingToTest.vote(2);
 
         try votingToTest.winningProposalDescription() {
             Assert.ok(false, "winningProposalDescription - during wrong session (not VotesTallied) - Test Failed : function execution should fail");
@@ -498,14 +500,16 @@ contract VotingSuite10WinningProposalDescription is AbstractVotingSuite {
         votingToTest.addVoter(address(this));
         votingToTest.openProposalRegistrationSession();
         votingToTest.addProposal("Proposal 1 description");
+        votingToTest.addProposal("Proposal 2 description");
+        votingToTest.addProposal("Proposal 3 description");
         votingToTest.closeProposalRegistrationSession();
         votingToTest.openVotingSession();
-        votingToTest.vote(1);
+        votingToTest.vote(2);
         votingToTest.closeVotingSession();
         votingToTest.tallyVotes();
 
         try votingToTest.winningProposalDescription() returns(string memory winningProposalDescription) {
-            Assert.equal("Proposal 1 description", winningProposalDescription, "winningProposalDescription - during VotingSessionStarted - Test Failed : winningProposalDescription - when status == VotesTallied - Test Failed : Wrong winning proposal description");
+            Assert.equal("Proposal 2 description", winningProposalDescription, "winningProposalDescription - during VotingSessionStarted - Test Failed : winningProposalDescription - when status == VotesTallied - Test Failed : Wrong winning proposal description");
         } catch Error(string memory _err) {
             Assert.ok(false, string(abi.encodePacked("winningProposalDescription - during VotingSessionStarted - Test Failed : ", _err)));
         }
