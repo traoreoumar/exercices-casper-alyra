@@ -22,3 +22,4 @@
 ### Smart contract Solidity : bonnes pratiques et sécurité
 
 - [PullPayment](solidity_bonnes_pratiques_et_securite/pull_payment)
+- [Mini Audit - Smart contract](solidity_bonnes_pratiques_et_securite/mini_audit_smart_contract)
