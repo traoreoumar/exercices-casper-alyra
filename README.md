@@ -23,3 +23,8 @@
 
 - [PullPayment](solidity_bonnes_pratiques_et_securite/pull_payment)
 - [Mini Audit - Smart contract](solidity_bonnes_pratiques_et_securite/mini_audit_smart_contract)
+
+### Dapp & Truffle
+
+- [Récupérer la balance en tokens d'une address](dapp_truffle/get_token_balance)
+- [Récupérer les informations d'un smart contract](dapp_truffle/get_info)
