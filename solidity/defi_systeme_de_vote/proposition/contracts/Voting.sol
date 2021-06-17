@@ -46,7 +46,6 @@ contract Voting is Ownable {
     mapping(address => Voter) public voters;
     mapping(uint => Proposal) public proposals;
     mapping(string => bool) internal proposalsDescription;
-    uint[] internal arrayProposalIds;
     WorkflowStatus public status;
     uint internal lastProposalId;
 
@@ -111,7 +110,6 @@ contract Voting is Ownable {
 
         Proposal memory proposalToAdd = Proposal(_description, 0);
         proposals[lastProposalId] = proposalToAdd;
-        arrayProposalIds.push(lastProposalId);
 
         proposalsDescription[_description] = true;
 
