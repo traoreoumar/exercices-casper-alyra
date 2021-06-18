@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import getWeb3 from "./getWeb3";
 
-import "./App.css";
+import "./App.scss";
 
 class App extends Component {
   state = { web3: null };

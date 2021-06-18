@@ -3,9 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "bootstrap": "^5.0.1",
     "react": "16.11.0",
+    "react-bootstrap": "^1.6.1",
     "react-dom": "16.11.0",
     "react-scripts": "3.2.0",
+    "sass": "^1.35.1",
     "web3": "1.2.2"
   },
   "scripts": {
