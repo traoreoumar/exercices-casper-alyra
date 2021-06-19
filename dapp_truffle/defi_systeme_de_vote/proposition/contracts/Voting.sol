@@ -13,6 +13,7 @@ contract Voting is Ownable {
         bool isRegistered;
         bool hasVoted;
         uint votedProposalId;
+        uint index;
     }
 
     struct Proposal {
@@ -44,6 +45,7 @@ contract Voting is Ownable {
     uint private winningProposalVoteCount;
 
     mapping(address => Voter) public voters;
+    address[] public votersAddresses;
     mapping(uint => Proposal) public proposals;
     mapping(string => bool) internal proposalsDescription;
     WorkflowStatus public status;
@@ -52,6 +54,10 @@ contract Voting is Ownable {
     modifier onlyVoter() {
         require(voters[msg.sender].isRegistered, "Only voter can call this function");
         _;
+    }
+
+    function getVotersAddresses() public view returns(address[] memory) {
+        return votersAddresses;
     }
 
     // ------------------------------ Phase 1 : Manage voters list ------------------------------
@@ -65,8 +71,9 @@ contract Voting is Ownable {
         require(!voters[_voterAddress].isRegistered, "Voter already registered");
         require(address(0) != _voterAddress, "address(0) can't vote");
 
-        Voter memory voterToAdd = Voter(true, false, 0);
+        Voter memory voterToAdd = Voter(true, false, 0, votersAddresses.length);
         voters[_voterAddress] = voterToAdd;
+        votersAddresses.push(_voterAddress);
 
         emit VoterRegistered(_voterAddress);
     }
@@ -79,7 +86,11 @@ contract Voting is Ownable {
         require(status == WorkflowStatus.RegisteringVoters, "Registration voter session is closed"); // TODO: Gas costs: message too long (> 32)
         require(voters[_voterAddress].isRegistered, "Voter not registered");
 
+        voters[votersAddresses[votersAddresses.length - 1]].index = voters[_voterAddress].index;
+        votersAddresses[voters[_voterAddress].index] = votersAddresses[votersAddresses.length - 1];
+
         delete voters[_voterAddress];
+        votersAddresses.pop();
 
         emit VoterUnregistered(_voterAddress);
     }
