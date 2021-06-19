@@ -3,6 +3,7 @@ import VotingContract from "../../contracts/Voting.json";
 
 import "./Voting.scss";
 
+import VotingContent from "../VotingContent/VotingContent";
 import { VotingContractContext } from "../../contexts/voting-contract-context";
 import { Web3Context } from "../../contexts/web3-context";
 
@@ -49,6 +50,7 @@ function Voting(props) {
   return (
     <VotingContractContext.Provider value={votingContractContext}>
       <div className="voting-container">
+        <VotingContent></VotingContent>
       </div>
     </VotingContractContext.Provider>
   );
