@@ -1,7 +1,10 @@
 import React, { useContext } from "react";
+import { Card } from 'react-bootstrap';
 
 import "./VotingContent.scss";
 
+import VotersList from '../VotersList/VotersList';
+import VoterFormModal from '../VoterFormModal/VoterFormModal';
 import { VotingContractContext } from "../../contexts/voting-contract-context";
 import { VotingWorkflowStatusEnum } from "../../interfaces/VotingWorkflowStatusEnum";
 
@@ -13,7 +16,19 @@ function VotingContent(props) {
   switch (status) {
     case VotingWorkflowStatusEnum.RegisteringVoters:
       content = (
-        <p>RegisteringVoters</p>
+        <Card>
+          <Card.Header>
+            <Card.Title>Votants</Card.Title>
+          </Card.Header>
+
+          <Card.Body>
+            <VotersList></VotersList>
+          </Card.Body>
+
+          <Card.Footer className="card-footer-btn-fs">
+            <VoterFormModal></VoterFormModal>
+          </Card.Footer>
+        </Card>
       );
       break;
 

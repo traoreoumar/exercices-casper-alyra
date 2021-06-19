@@ -1,0 +1,13 @@
+.card-title {
+    text-align: center;
+}
+
+.card-footer-btn-fs {
+    padding: 0;
+
+    .btn {
+        width: 100%;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+}

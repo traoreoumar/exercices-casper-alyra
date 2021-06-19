@@ -1,7 +1,8 @@
 import React from "react";
 
 export const VotingContractContext = React.createContext({
-  voters: {},
+  votingContract: null,
+  votersAddresses: [],
   setVoters: null,
   proposals: {},
   setProposals: null,

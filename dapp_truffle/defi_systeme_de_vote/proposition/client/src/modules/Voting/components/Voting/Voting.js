@@ -13,9 +13,9 @@ function Voting(props) {
   const votingInitialData = useContext(VotingContractContext);
 
   // State & Effect
-  const [voters, setVoters] = useState(votingInitialData.voters);
+  const [votersAddresses, setVotersAddresses] = useState(votingInitialData.votersAddresses);
   useEffect(() => {
-  }, [voters]);
+  }, [votersAddresses]);
 
   const [proposals, setProposals] = useState(votingInitialData.proposals);
   useEffect(() => {
@@ -28,19 +28,21 @@ function Voting(props) {
   const [votingContract, setVotingContract] = useState(null);
   useEffect(() => {
     if (votingContract) {
-      getVotingContractVoters(votingContract, setVoters);
+      manageVotingContractEvents(votingContract, votersAddresses, setVotersAddresses);
+      getVotingContractVotersAddresses(votingContract, setVotersAddresses);
       getVotingContractProposals(votingContract, setProposals);
       getVotingContractStatus(votingContract, setStatus);
     }
-  }, [votingContract, status]);
+  }, [votingContract]);
 
   if (!votingContract) {
     getVotingContract(web3, setVotingContract);
   }
 
   const votingContractContext = {
-    voters,
-    setVoters,
+    votingContract,
+    votersAddresses,
+    setVotersAddresses,
     proposals,
     setProposals,
     status,
@@ -69,9 +71,9 @@ async function getVotingContract(web3, setVotingContract) {
   setVotingContract(votingContract);
 }
 
-async function getVotingContractVoters(votingContract, setVoters) {
-  const voters = await votingContract.methods.status().call();
-  setVoters(voters);
+async function getVotingContractVotersAddresses(votingContract, setVotersAddresses) {
+  const votersAddresses = await votingContract.methods.getVotersAddresses().call();
+  setVotersAddresses(votersAddresses);
 }
 
 async function getVotingContractProposals(votingContract, setProposals) {
@@ -82,6 +84,38 @@ async function getVotingContractProposals(votingContract, setProposals) {
 async function getVotingContractStatus(votingContract, setStatus) {
   const status = parseInt(await votingContract.methods.status().call());
   setStatus(status);
+}
+
+function manageVotingContractEvents(votingContract, votersAddresses, setVotersAddresses) {
+  votingContract.events.VoterRegistered()
+    .on('data', (event) => {
+      const index = votersAddresses.indexOf(event.returnValues[0]);
+      if (-1 === index) {
+        votersAddresses.push(event.returnValues[0]);
+        setVotersAddresses(votersAddresses);
+      } else {
+        getVotingContractVotersAddresses(votingContract, setVotersAddresses);
+      }
+    })
+    .on('error', (event) => {
+      console.error(event);
+    })
+  ;
+
+  votingContract.events.VoterUnregistered()
+    .on('data', (event) => {
+      const index = votersAddresses.indexOf(event.returnValues[0]);
+      if (-1 !== index) {
+        votersAddresses.splice(index);
+        setVotersAddresses(votersAddresses);
+      } else {
+        getVotingContractVotersAddresses(votingContract, setVotersAddresses);
+      }
+    })
+    .on('error', (event) => {
+      console.error(event);
+    })
+  ;
 }
 
 export default Voting;

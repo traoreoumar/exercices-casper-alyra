@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import getWeb3 from "./getWeb3";
+import { Container } from "react-bootstrap";
 
 import "./App.scss";
 
@@ -35,12 +36,12 @@ class App extends Component {
     }
 
     return (
-      <div className="App">
-        <h1>Vote</h1>
+      <Container>
+        <h1 className="text-center">Vote</h1>
         <Web3Context.Provider value={{ web3: this.state.web3, accounts: this.state.accounts }}>
           <Voting></Voting>
         </Web3Context.Provider>
-      </div>
+      </Container>
     );
   }
 }
