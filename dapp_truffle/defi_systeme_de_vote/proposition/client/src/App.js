@@ -3,7 +3,7 @@ import getWeb3 from "./getWeb3";
 
 import "./App.scss";
 
-import Voting from "./components/Voting/Voting";
+import Voting from "./modules/Voting/components/Voting/Voting";
 import { Web3Context } from "./contexts/web3-context";
 
 class App extends Component {

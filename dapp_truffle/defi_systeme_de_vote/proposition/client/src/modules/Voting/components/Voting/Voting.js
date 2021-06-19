@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import VotingContract from "../../contracts/Voting.json";
+import VotingContract from "../../../../contracts/Voting.json";
 
 import "./Voting.scss";
 
 import VotingContent from "../VotingContent/VotingContent";
 import { VotingContractContext } from "../../contexts/voting-contract-context";
-import { Web3Context } from "../../contexts/web3-context";
+import { Web3Context } from "../../../../contexts/web3-context";
 
 function Voting(props) {
   // Contexts
