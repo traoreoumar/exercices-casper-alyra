@@ -28,7 +28,15 @@ function Voting(props) {
   const [votingContract, setVotingContract] = useState(null);
   useEffect(() => {
     if (votingContract) {
-      manageVotingContractEvents(votingContract, votersAddresses, setVotersAddresses, status, setStatus);
+      manageVotingContractEvents(
+        votingContract,
+        votersAddresses,
+        setVotersAddresses,
+        proposals,
+        setProposals,
+        status,
+        setStatus
+      );
       getVotingContractVotersAddresses(votingContract, setVotersAddresses);
       getVotingContractProposals(votingContract, setProposals);
       getVotingContractStatus(votingContract, setStatus);
@@ -77,7 +85,7 @@ async function getVotingContractVotersAddresses(votingContract, setVotersAddress
 }
 
 async function getVotingContractProposals(votingContract, setProposals) {
-  const proposals = await votingContract.methods.status().call();
+  const proposals = await votingContract.methods.getProposals().call();
   setProposals(proposals);
 }
 
@@ -86,7 +94,7 @@ async function getVotingContractStatus(votingContract, setStatus) {
   setStatus(status);
 }
 
-function manageVotingContractEvents(votingContract, votersAddresses, setVotersAddresses, status, setStatus) {
+function manageVotingContractEvents(votingContract, votersAddresses, setVotersAddresses, proposals, setProposals, status, setStatus) {
   votingContract.events.VoterRegistered()
     .on('data', (event) => {
       const index = votersAddresses.indexOf(event.returnValues.voterAddress);
@@ -121,6 +129,32 @@ function manageVotingContractEvents(votingContract, votersAddresses, setVotersAd
     .on('data', (event) => {
       const newStatus = parseInt(event.returnValues.newStatus);
       setStatus(newStatus);
+    })
+    .on('error', (event) => {
+      console.error(event);
+    })
+  ;
+
+  votingContract.events.ProposalRegistered()
+    .on('data', async (event) => {
+      const proposalId = parseInt(event.returnValues.proposalId);
+
+      const index = proposals.find((item) => {
+        return proposalId === item.proposalId;
+      });
+
+      if (-1 === index) {
+        try {
+          const proposal = await votingContract.methods.proposals(proposalId).call();
+          proposals.push(proposal);
+          setProposals(proposals);
+        } catch (error) {
+          console.error(error);
+          getVotingContractProposals(votingContract, setProposals);
+        }
+      } else {
+        getVotingContractProposals(votingContract, setProposals);
+      }
     })
     .on('error', (event) => {
       console.error(event);

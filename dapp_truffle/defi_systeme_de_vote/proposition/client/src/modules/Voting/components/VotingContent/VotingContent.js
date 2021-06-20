@@ -3,6 +3,8 @@ import { Button, Card } from 'react-bootstrap';
 
 import "./VotingContent.scss";
 
+import ProposalsList from '../ProposalsList/ProposalsList';
+import ProposalFormModal from '../ProposalFormModal/ProposalFormModal';
 import VotersList from '../VotersList/VotersList';
 import VoterFormModal from '../VoterFormModal/VoterFormModal';
 import { VotingContractContext } from "../../contexts/voting-contract-context";
@@ -51,14 +53,44 @@ function VotingContent(props) {
       break;
 
     case VotingWorkflowStatusEnum.ProposalsRegistrationStarted:
-      content = (
-        <p>ProposalsRegistrationStarted</p>
-      );
-      break;
-
     case VotingWorkflowStatusEnum.ProposalsRegistrationEnded:
+      let title = "Fin de la période d'enregistrement des propositions";
+      let cardFooter = <></>;
+      let setStatusLabel = "Ouvrir la phase de vote";
+      let setStatusMethodName = "openVotingSession";
+
+      if (VotingWorkflowStatusEnum.ProposalsRegistrationStarted === status) {
+        title = 'Enregistrement des propositions';
+        cardFooter = (
+          <Card.Footer className="card-footer-btn-fs">
+            <ProposalFormModal></ProposalFormModal>
+          </Card.Footer>
+        );
+        setStatusLabel = "Fermer la phase d'enregistrement des propositions";
+        setStatusMethodName = 'closeProposalRegistrationSession';
+      }
+
       content = (
-        <p>ProposalsRegistrationEnded</p>
+        <>
+          <h2>{title}</h2>
+          <Card>
+            <Card.Header>
+              <Card.Title>Propositions</Card.Title>
+            </Card.Header>
+
+            <Card.Body>
+              <ProposalsList></ProposalsList>
+            </Card.Body>
+
+            {cardFooter}
+          </Card>
+
+          <div>
+            <Button className="ml-auto" onClick={(event) => setStatus(event, setStatusMethodName)}>
+              {setStatusLabel}
+            </Button>
+          </div>
+        </>
       );
       break;
 

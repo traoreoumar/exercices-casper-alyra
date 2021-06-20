@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.6.11;
+pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
@@ -45,9 +46,10 @@ contract Voting is Ownable {
     uint private winningProposalVoteCount;
 
     mapping(address => Voter) public voters;
-    address[] public votersAddresses;
+    address[] internal votersAddresses;
     mapping(uint => Proposal) public proposals;
     mapping(string => bool) internal proposalsDescription;
+    Proposal[] internal proposalsList;
     WorkflowStatus public status;
     uint internal lastProposalId;
 
@@ -58,6 +60,10 @@ contract Voting is Ownable {
 
     function getVotersAddresses() public view returns(address[] memory) {
         return votersAddresses;
+    }
+
+    function getProposals() public view returns(Proposal[] memory) {
+        return proposalsList;
     }
 
     // ------------------------------ Phase 1 : Manage voters list ------------------------------
@@ -122,6 +128,7 @@ contract Voting is Ownable {
         Proposal memory proposalToAdd = Proposal(_description, 0);
         proposals[lastProposalId] = proposalToAdd;
 
+        proposalsList.push(proposalToAdd);
         proposalsDescription[_description] = true;
 
         emit ProposalRegistered(lastProposalId);
