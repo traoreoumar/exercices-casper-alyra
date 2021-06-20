@@ -28,7 +28,7 @@ function Voting(props) {
   const [votingContract, setVotingContract] = useState(null);
   useEffect(() => {
     if (votingContract) {
-      manageVotingContractEvents(votingContract, votersAddresses, setVotersAddresses);
+      manageVotingContractEvents(votingContract, votersAddresses, setVotersAddresses, status, setStatus);
       getVotingContractVotersAddresses(votingContract, setVotersAddresses);
       getVotingContractProposals(votingContract, setProposals);
       getVotingContractStatus(votingContract, setStatus);
@@ -86,7 +86,7 @@ async function getVotingContractStatus(votingContract, setStatus) {
   setStatus(status);
 }
 
-function manageVotingContractEvents(votingContract, votersAddresses, setVotersAddresses) {
+function manageVotingContractEvents(votingContract, votersAddresses, setVotersAddresses, status, setStatus) {
   votingContract.events.VoterRegistered()
     .on('data', (event) => {
       const index = votersAddresses.indexOf(event.returnValues[0]);
@@ -111,6 +111,16 @@ function manageVotingContractEvents(votingContract, votersAddresses, setVotersAd
       } else {
         getVotingContractVotersAddresses(votingContract, setVotersAddresses);
       }
+    })
+    .on('error', (event) => {
+      console.error(event);
+    })
+  ;
+
+  votingContract.events.WorkflowStatusChange()
+    .on('data', (event) => {
+      const newStatus = parseInt(event.returnValues.newStatus);
+      setStatus(newStatus);
     })
     .on('error', (event) => {
       console.error(event);

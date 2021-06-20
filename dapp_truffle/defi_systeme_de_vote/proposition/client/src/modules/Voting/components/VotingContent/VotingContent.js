@@ -1,34 +1,52 @@
 import React, { useContext } from "react";
-import { Card } from 'react-bootstrap';
+import { Button, Card } from 'react-bootstrap';
 
 import "./VotingContent.scss";
 
 import VotersList from '../VotersList/VotersList';
 import VoterFormModal from '../VoterFormModal/VoterFormModal';
 import { VotingContractContext } from "../../contexts/voting-contract-context";
+import { Web3Context } from "../../../../contexts/web3-context";
 import { VotingWorkflowStatusEnum } from "../../interfaces/VotingWorkflowStatusEnum";
 
 function VotingContent(props) {
   // Contexts
-  const { status } = useContext(VotingContractContext);
+  const { accounts } = useContext(Web3Context);
+  const { votingContract, status } = useContext(VotingContractContext);
+
+  const setStatus = (event, methodName) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    votingContract.methods[methodName]().send({ from: accounts[0] });
+  }
 
   let content = (<></>);
   switch (status) {
     case VotingWorkflowStatusEnum.RegisteringVoters:
       content = (
-        <Card>
-          <Card.Header>
-            <Card.Title>Votants</Card.Title>
-          </Card.Header>
+        <>
+          <h2>Enregistrement des Votants</h2>
+          <Card>
+            <Card.Header>
+              <Card.Title>Votants</Card.Title>
+            </Card.Header>
 
-          <Card.Body>
-            <VotersList></VotersList>
-          </Card.Body>
+            <Card.Body>
+              <VotersList></VotersList>
+            </Card.Body>
 
-          <Card.Footer className="card-footer-btn-fs">
-            <VoterFormModal></VoterFormModal>
-          </Card.Footer>
-        </Card>
+            <Card.Footer className="card-footer-btn-fs">
+              <VoterFormModal></VoterFormModal>
+            </Card.Footer>
+          </Card>
+
+          <div>
+            <Button className="ml-auto" onClick={(event) => setStatus(event, 'openProposalRegistrationSession')}>
+              Fermer la phase d'enregistrement des votants
+            </Button>
+          </div>
+        </>
       );
       break;
 
