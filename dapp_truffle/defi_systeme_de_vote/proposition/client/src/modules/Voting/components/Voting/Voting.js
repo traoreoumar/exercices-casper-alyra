@@ -89,7 +89,7 @@ async function getVotingContractStatus(votingContract, setStatus) {
 function manageVotingContractEvents(votingContract, votersAddresses, setVotersAddresses, status, setStatus) {
   votingContract.events.VoterRegistered()
     .on('data', (event) => {
-      const index = votersAddresses.indexOf(event.returnValues[0]);
+      const index = votersAddresses.indexOf(event.returnValues.voterAddress);
       if (-1 === index) {
         votersAddresses.push(event.returnValues[0]);
         setVotersAddresses(votersAddresses);
@@ -104,7 +104,7 @@ function manageVotingContractEvents(votingContract, votersAddresses, setVotersAd
 
   votingContract.events.VoterUnregistered()
     .on('data', (event) => {
-      const index = votersAddresses.indexOf(event.returnValues[0]);
+      const index = votersAddresses.indexOf(event.returnValues.voterAddress);
       if (-1 !== index) {
         votersAddresses.splice(index);
         setVotersAddresses(votersAddresses);
