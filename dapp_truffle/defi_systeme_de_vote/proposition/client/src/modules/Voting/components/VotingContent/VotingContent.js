@@ -1,8 +1,9 @@
 import React, { useContext } from "react";
-import { Button, Card } from 'react-bootstrap';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 
 import "./VotingContent.scss";
 
+import DefaultCard from '../DefaultCard/DefaultCard';
 import ProposalsList from '../ProposalsList/ProposalsList';
 import ProposalFormModal from '../ProposalFormModal/ProposalFormModal';
 import VotersList from '../VotersList/VotersList';
@@ -29,19 +30,11 @@ function VotingContent(props) {
       content = (
         <>
           <h2>Enregistrement des Votants</h2>
-          <Card>
-            <Card.Header>
-              <Card.Title>Votants</Card.Title>
-            </Card.Header>
-
-            <Card.Body>
-              <VotersList></VotersList>
-            </Card.Body>
-
-            <Card.Footer className="card-footer-btn-fs">
-              <VoterFormModal></VoterFormModal>
-            </Card.Footer>
-          </Card>
+          <DefaultCard
+            title='Votants'
+            content={<VotersList isEditable={false}></VotersList>}
+            footer={<VoterFormModal></VoterFormModal>}
+          ></DefaultCard>
 
           <div>
             <Button className="ml-auto" onClick={(event) => setStatus(event, 'openProposalRegistrationSession')}>
@@ -53,41 +46,49 @@ function VotingContent(props) {
       break;
 
     case VotingWorkflowStatusEnum.ProposalsRegistrationStarted:
-    case VotingWorkflowStatusEnum.ProposalsRegistrationEnded:
-      let title = "Fin de la période d'enregistrement des propositions";
-      let cardFooter = <></>;
-      let setStatusLabel = "Ouvrir la phase de vote";
-      let setStatusMethodName = "openVotingSession";
-
-      if (VotingWorkflowStatusEnum.ProposalsRegistrationStarted === status) {
-        title = 'Enregistrement des propositions';
-        cardFooter = (
-          <Card.Footer className="card-footer-btn-fs">
-            <ProposalFormModal></ProposalFormModal>
-          </Card.Footer>
-        );
-        setStatusLabel = "Fermer la phase d'enregistrement des propositions";
-        setStatusMethodName = 'closeProposalRegistrationSession';
-      }
-
       content = (
         <>
-          <h2>{title}</h2>
-          <Card>
-            <Card.Header>
-              <Card.Title>Propositions</Card.Title>
-            </Card.Header>
-
-            <Card.Body>
-              <ProposalsList></ProposalsList>
-            </Card.Body>
-
-            {cardFooter}
-          </Card>
+          <h2>Enregistrement des propositions</h2>
+          <DefaultCard
+            title='Propositions'
+            content={<ProposalsList></ProposalsList>}
+            footer={<ProposalFormModal></ProposalFormModal>}
+          ></DefaultCard>
 
           <div>
-            <Button className="ml-auto" onClick={(event) => setStatus(event, setStatusMethodName)}>
-              {setStatusLabel}
+            <Button className="ml-auto" onClick={(event) => setStatus(event, 'closeProposalRegistrationSession')}>
+              Fermer la phase d'enregistrement des propositions
+            </Button>
+          </div>
+        </>
+      );
+      break;
+
+    case VotingWorkflowStatusEnum.ProposalsRegistrationEnded:
+      content = (
+        <>
+          <h2>Fin de la période d'enregistrement des propositions</h2>
+          <Container>
+            <Row>
+              <Col>
+                <DefaultCard
+                  title='Votants'
+                  content={<VotersList></VotersList>}
+                ></DefaultCard>
+              </Col>
+
+              <Col>
+                <DefaultCard
+                  title='Propositions'
+                  content={<ProposalsList></ProposalsList>}
+                ></DefaultCard>
+              </Col>
+            </Row>
+          </Container>
+
+          <div>
+            <Button className="ml-auto" onClick={(event) => setStatus(event, 'openVotingSession')}>
+              Ouvrir la phase de vote
             </Button>
           </div>
         </>

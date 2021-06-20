@@ -33,16 +33,25 @@ function VotersList(props) {
     content = votersAddresses.map((addressVoter) => {
       return (
         <ListGroup.Item>
-          <Container>
-            <Row>
-              <Col className="my-auto">{addressVoter}</Col>
-              <Col xs="auto">
-                <Button variant="danger" onClick={(event) => removeVoter(event, addressVoter)}>
-                  <Trash></Trash>
-                </Button>
-              </Col>
-            </Row>
-          </Container>
+          { props.isEditable
+            ? (
+              <Container>
+                <Row>
+                  <Col className="my-auto">{addressVoter}</Col>
+                  <Col xs="auto">
+                    <Button variant="danger" onClick={(event) => removeVoter(event, addressVoter)}>
+                      <Trash></Trash>
+                    </Button>
+                  </Col>
+                </Row>
+              </Container>
+            )
+            : (
+              <>
+                {addressVoter}
+              </>
+            )
+          }
         </ListGroup.Item>
       );
     })
