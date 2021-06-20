@@ -30,21 +30,29 @@ function Voting(props) {
     if (votingContract) {
       manageVotingContractEvents(
         votingContract,
-        votersAddresses,
         setVotersAddresses,
-        proposals,
         setProposals,
-        status,
         setStatus
       );
-      getVotingContractVotersAddresses(votingContract, setVotersAddresses);
-      getVotingContractProposals(votingContract, setProposals);
-      getVotingContractStatus(votingContract, setStatus);
+
+      getVotingContractVotersAddresses(votingContract).then((votersAddresses) => {
+        setVotersAddresses(votersAddresses);
+      });
+
+      getVotingContractProposals(votingContract).then((proposals) => {
+        setProposals(proposals);
+      });
+
+      getVotingContractStatus(votingContract).then((status) => {
+        setStatus(status);
+      });
     }
   }, [votingContract]);
 
   if (!votingContract) {
-    getVotingContract(web3, setVotingContract);
+    getVotingContract(web3, setVotingContract).then((instance) => {
+      setVotingContract(instance);
+    })
   }
 
   const votingContractContext = {
@@ -75,35 +83,32 @@ async function getVotingContract(web3, setVotingContract) {
     deployedNetwork && deployedNetwork.address,
   );
 
-  // Set votingContract state
-  setVotingContract(votingContract);
+  return votingContract;
 }
 
-async function getVotingContractVotersAddresses(votingContract, setVotersAddresses) {
-  const votersAddresses = await votingContract.methods.getVotersAddresses().call();
-  setVotersAddresses(votersAddresses);
+function getVotingContractVotersAddresses(votingContract) {
+  return votingContract.methods.getVotersAddresses().call();
 }
 
-async function getVotingContractProposals(votingContract, setProposals) {
-  const proposals = await votingContract.methods.getProposals().call();
-  setProposals(proposals);
+function getVotingContractProposals(votingContract) {
+  return votingContract.methods.getProposals().call();
 }
 
-async function getVotingContractStatus(votingContract, setStatus) {
-  const status = parseInt(await votingContract.methods.status().call());
-  setStatus(status);
+function getVotingContractStatus(votingContract) {
+  return votingContract.methods.status().call().then(parseInt);
 }
 
-function manageVotingContractEvents(votingContract, votersAddresses, setVotersAddresses, proposals, setProposals, status, setStatus) {
+function manageVotingContractEvents(votingContract, setVotersAddresses, setProposals, setStatus) {
   votingContract.events.VoterRegistered()
     .on('data', (event) => {
-      const index = votersAddresses.indexOf(event.returnValues.voterAddress);
-      if (-1 === index) {
-        votersAddresses.push(event.returnValues[0]);
-        setVotersAddresses(votersAddresses);
-      } else {
-        getVotingContractVotersAddresses(votingContract, setVotersAddresses);
-      }
+      setVotersAddresses((votersAddresses) => {
+        const index = votersAddresses.indexOf(event.returnValues.voterAddress);
+        if (-1 === index) {
+          votersAddresses = [...votersAddresses, event.returnValues[0]];
+        }
+
+        return votersAddresses;
+      });
     })
     .on('error', (event) => {
       console.error(event);
@@ -112,13 +117,15 @@ function manageVotingContractEvents(votingContract, votersAddresses, setVotersAd
 
   votingContract.events.VoterUnregistered()
     .on('data', (event) => {
-      const index = votersAddresses.indexOf(event.returnValues.voterAddress);
-      if (-1 !== index) {
-        votersAddresses.splice(index);
-        setVotersAddresses(votersAddresses);
-      } else {
-        getVotingContractVotersAddresses(votingContract, setVotersAddresses);
-      }
+      setVotersAddresses((votersAddresses) => {
+        const index = votersAddresses.indexOf(event.returnValues.voterAddress);
+        if (-1 !== index) {
+          votersAddresses.splice(index)
+          votersAddresses = [...votersAddresses];
+        }
+
+        return votersAddresses;
+      });
     })
     .on('error', (event) => {
       console.error(event);
@@ -139,22 +146,24 @@ function manageVotingContractEvents(votingContract, votersAddresses, setVotersAd
     .on('data', async (event) => {
       const proposalId = parseInt(event.returnValues.proposalId);
 
-      const index = proposals.find((item) => {
-        return proposalId === item.proposalId;
-      });
+      setProposals((proposals) => {
+        const index = proposals.findIndex((item) => {
+          return proposalId === item.proposalId;
+        });
 
-      if (-1 === index) {
-        try {
-          const proposal = await votingContract.methods.proposals(proposalId).call();
-          proposals.push(proposal);
-          setProposals(proposals);
-        } catch (error) {
-          console.error(error);
-          getVotingContractProposals(votingContract, setProposals);
+        if (-1 === index) {
+          votingContract.methods.proposals(proposalId).call()
+            .then((proposal) => {
+              setProposals([...proposals, proposal]);
+            })
+            .catch((error) => {
+              console.error(error);
+            })
+          ;
         }
-      } else {
-        getVotingContractProposals(votingContract, setProposals);
-      }
+
+        return proposals;
+      });
     })
     .on('error', (event) => {
       console.error(event);

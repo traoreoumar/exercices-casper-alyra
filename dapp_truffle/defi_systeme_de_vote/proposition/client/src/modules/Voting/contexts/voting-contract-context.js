@@ -4,7 +4,7 @@ export const VotingContractContext = React.createContext({
   votingContract: null,
   votersAddresses: [],
   setVoters: null,
-  proposals: {},
+  proposals: [],
   setProposals: null,
   status: null,
   setStatus: null,
