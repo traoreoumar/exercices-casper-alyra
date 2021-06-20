@@ -15,7 +15,13 @@ import { VotingWorkflowStatusEnum } from "../../interfaces/VotingWorkflowStatusE
 function VotingContent(props) {
   // Contexts
   const { accounts } = useContext(Web3Context);
-  const { votingContract, status } = useContext(VotingContractContext);
+  const { votingContract, owner, votersAddresses, status } = useContext(VotingContractContext);
+
+  const isOwner = owner && accounts[0] && owner.toUpperCase() === accounts[0].toUpperCase();
+  const isVoter = votersAddresses
+    && accounts[0]
+    && votersAddresses.map((voterAddress) => voterAddress.toUpperCase()).includes(accounts[0].toUpperCase())
+  ;
 
   const setStatus = (event, methodName) => {
     event.preventDefault();
@@ -32,15 +38,23 @@ function VotingContent(props) {
           <h2>Enregistrement des Votants</h2>
           <DefaultCard
             title='Votants'
-            content={<VotersList isEditable={false}></VotersList>}
-            footer={<VoterFormModal></VoterFormModal>}
+            content={<VotersList isEditable={isOwner}></VotersList>}
+            footer={isOwner
+              ? <VoterFormModal></VoterFormModal>
+              : <></>
+            }
           ></DefaultCard>
 
-          <div>
-            <Button className="ml-auto" onClick={(event) => setStatus(event, 'openProposalRegistrationSession')}>
-              Fermer la phase d'enregistrement des votants
-            </Button>
-          </div>
+          {isOwner
+            ? (
+              <div>
+                <Button className="ml-auto" onClick={(event) => setStatus(event, 'openProposalRegistrationSession')}>
+                  Fermer la phase d'enregistrement des votants
+                </Button>
+              </div>
+            )
+            : <></>
+          }
         </>
       );
       break;
@@ -52,14 +66,22 @@ function VotingContent(props) {
           <DefaultCard
             title='Propositions'
             content={<ProposalsList></ProposalsList>}
-            footer={<ProposalFormModal></ProposalFormModal>}
+            footer={isVoter
+              ? <ProposalFormModal></ProposalFormModal>
+              : <></>
+            }
           ></DefaultCard>
 
-          <div>
-            <Button className="ml-auto" onClick={(event) => setStatus(event, 'closeProposalRegistrationSession')}>
-              Fermer la phase d'enregistrement des propositions
-            </Button>
-          </div>
+          {isOwner
+            ? (
+              <div>
+                <Button className="ml-auto" onClick={(event) => setStatus(event, 'closeProposalRegistrationSession')}>
+                  Fermer la phase d'enregistrement des propositions
+                </Button>
+              </div>
+            )
+            : <></>
+          }
         </>
       );
       break;
@@ -86,11 +108,16 @@ function VotingContent(props) {
             </Row>
           </Container>
 
-          <div>
-            <Button className="ml-auto" onClick={(event) => setStatus(event, 'openVotingSession')}>
-              Ouvrir la phase de vote
-            </Button>
-          </div>
+          {isOwner
+            ? (
+              <div>
+                <Button className="ml-auto" onClick={(event) => setStatus(event, 'openVotingSession')}>
+                  Ouvrir la phase de vote
+                </Button>
+              </div>
+            )
+            : <></>
+          }
         </>
       );
       break;

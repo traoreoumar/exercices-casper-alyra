@@ -13,6 +13,10 @@ function Voting(props) {
   const votingInitialData = useContext(VotingContractContext);
 
   // State & Effect
+  const [owner, setOwner] = useState(votingInitialData.owner);
+  useEffect(() => {
+  }, [setOwner]);
+
   const [votersAddresses, setVotersAddresses] = useState(votingInitialData.votersAddresses);
   useEffect(() => {
   }, [votersAddresses]);
@@ -30,10 +34,15 @@ function Voting(props) {
     if (votingContract) {
       manageVotingContractEvents(
         votingContract,
+        setOwner,
         setVotersAddresses,
         setProposals,
         setStatus
       );
+
+      getVotingContractOwner(votingContract).then((owner) => {
+        setOwner(owner);
+      });
 
       getVotingContractVotersAddresses(votingContract).then((votersAddresses) => {
         setVotersAddresses(votersAddresses);
@@ -57,6 +66,7 @@ function Voting(props) {
 
   const votingContractContext = {
     votingContract,
+    owner,
     votersAddresses,
     setVotersAddresses,
     proposals,
@@ -86,6 +96,10 @@ async function getVotingContract(web3, setVotingContract) {
   return votingContract;
 }
 
+function getVotingContractOwner(votingContract) {
+  return votingContract.methods.owner().call();
+}
+
 function getVotingContractVotersAddresses(votingContract) {
   return votingContract.methods.getVotersAddresses().call();
 }
@@ -98,13 +112,17 @@ function getVotingContractStatus(votingContract) {
   return votingContract.methods.status().call().then(parseInt);
 }
 
-function manageVotingContractEvents(votingContract, setVotersAddresses, setProposals, setStatus) {
+function manageVotingContractEvents(votingContract, setOwner, setVotersAddresses, setProposals, setStatus) {
   votingContract.events.VoterRegistered()
     .on('data', (event) => {
       setVotersAddresses((votersAddresses) => {
-        const index = votersAddresses.indexOf(event.returnValues.voterAddress);
+        const voterAddress = event.returnValues.voterAddress;
+        const index = votersAddresses.findIndex((voterAddressItem) => {
+          return voterAddress.toUpperCase() === voterAddressItem.toUpperCase();
+        });
+
         if (-1 === index) {
-          votersAddresses = [...votersAddresses, event.returnValues[0]];
+          votersAddresses = [...votersAddresses, voterAddress];
         }
 
         return votersAddresses;
@@ -118,7 +136,11 @@ function manageVotingContractEvents(votingContract, setVotersAddresses, setPropo
   votingContract.events.VoterUnregistered()
     .on('data', (event) => {
       setVotersAddresses((votersAddresses) => {
-        const index = votersAddresses.indexOf(event.returnValues.voterAddress);
+        const voterAddress = event.returnValues.voterAddress;
+        const index = votersAddresses.findIndex((voterAddressItem) => {
+          return voterAddress.toUpperCase() === voterAddressItem.toUpperCase();
+        });
+
         if (-1 !== index) {
           votersAddresses.splice(index)
           votersAddresses = [...votersAddresses];
