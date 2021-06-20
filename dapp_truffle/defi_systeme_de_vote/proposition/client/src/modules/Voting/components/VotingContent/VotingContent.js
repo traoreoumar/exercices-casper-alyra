@@ -123,15 +123,57 @@ function VotingContent(props) {
       break;
 
     case VotingWorkflowStatusEnum.VotingSessionStarted:
-      content = (
-        <p>VotingSessionStarted</p>
-      );
-      break;
-
     case VotingWorkflowStatusEnum.VotingSessionEnded:
-      content = (
-        <p>VotingSessionEnded</p>
-      );
+      let title = 'Période de vote';
+      let setStatuslabel = 'Fermer la phase de vote';
+      let setStatusMethodName = 'closeVotingSession';
+
+      if (VotingWorkflowStatusEnum.VotingSessionEnded === status) {
+        title = 'Fin de la période de vote';
+        setStatuslabel = 'Comptabiliser les votes';
+        setStatusMethodName = 'tallyVotes';
+      }
+
+      if (isOwner) {
+        content = (
+          <>
+            <h2>{title}</h2>
+            <Container>
+              <Row>
+                <Col>
+                  <DefaultCard
+                    title='Votants'
+                    content={<VotersList></VotersList>}
+                  ></DefaultCard>
+                </Col>
+
+                <Col>
+                  <DefaultCard
+                    title='Propositions'
+                    content={<ProposalsList></ProposalsList>}
+                  ></DefaultCard>
+                </Col>
+              </Row>
+            </Container>
+
+            <div>
+              <Button className="ml-auto" onClick={(event) => setStatus(event, setStatusMethodName)}>
+                {setStatuslabel}
+              </Button>
+            </div>
+          </>
+        );
+      } else {
+        content = (
+          <>
+            <h2>{title}</h2>
+            <DefaultCard
+              title='Propositions'
+              content={<ProposalsList></ProposalsList>}
+            ></DefaultCard>
+          </>
+        );
+      }
       break;
 
     case VotingWorkflowStatusEnum.VotesTallied:

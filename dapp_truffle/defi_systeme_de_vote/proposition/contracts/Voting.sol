@@ -47,11 +47,9 @@ contract Voting is Ownable {
 
     mapping(address => Voter) public voters;
     address[] internal votersAddresses;
-    mapping(uint => Proposal) public proposals;
+    Proposal[] public proposals;
     mapping(string => bool) internal proposalsDescription;
-    Proposal[] internal proposalsList;
     WorkflowStatus public status;
-    uint internal lastProposalId;
 
     modifier onlyVoter() {
         require(voters[msg.sender].isRegistered, "Only voter can call this function");
@@ -63,7 +61,7 @@ contract Voting is Ownable {
     }
 
     function getProposals() public view returns(Proposal[] memory) {
-        return proposalsList;
+        return proposals;
     }
 
     // ------------------------------ Phase 1 : Manage voters list ------------------------------
@@ -123,15 +121,12 @@ contract Voting is Ownable {
         require(false == proposalsDescription[_description] , "Proposal already added");
         require(0 < bytes(_description).length, "proposal is empty");
 
-        lastProposalId++;
-
         Proposal memory proposalToAdd = Proposal(_description, 0);
-        proposals[lastProposalId] = proposalToAdd;
+        proposals.push(proposalToAdd);
 
-        proposalsList.push(proposalToAdd);
         proposalsDescription[_description] = true;
 
-        emit ProposalRegistered(lastProposalId);
+        emit ProposalRegistered(proposals.length - 1);
     }
 
     /** 
