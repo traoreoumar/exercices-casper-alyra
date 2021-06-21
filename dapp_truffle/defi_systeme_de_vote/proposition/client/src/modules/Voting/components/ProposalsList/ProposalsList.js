@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-import { ListGroup } from 'react-bootstrap';
+import { Col, ListGroup, Row } from 'react-bootstrap';
+import { Trophy } from 'react-bootstrap-icons';
 
 import "./ProposalsList.scss";
 
@@ -10,7 +11,7 @@ import { VotingWorkflowStatusEnum } from "../../interfaces/VotingWorkflowStatusE
 function ProposalsList(props) {
   // Contexts
   const { accounts } = useContext(Web3Context);
-  const { votingContract, proposals, status } = useContext(VotingContractContext);
+  const { votingContract, proposals, status, winningProposalId } = useContext(VotingContractContext);
 
   const [voter, setVoter] = useState(null);
 
@@ -52,11 +53,36 @@ function ProposalsList(props) {
     content = proposals.map((proposal, proposalId) => {
       return (
         <ListGroup.Item
-          variant={(voter && voter.hasVoted && proposalId === parseInt(voter.votedProposalId)) ? 'primary' : ''}
+          variant={
+            proposalId === winningProposalId
+              ? 'success'
+              : (
+                (voter && voter.hasVoted && proposalId === parseInt(voter.votedProposalId))
+                  ? 'primary'
+                  : ''
+              )
+          }
           action={VotingWorkflowStatusEnum.VotingSessionStarted === status && voter && !voter.hasVoted}
           onClick={(event) => vote(event, proposalId)}
         >
-          {proposal.description}
+          <Row>
+            <Col>
+              {proposalId === winningProposalId
+                ? <Trophy className="me-2" style={{ marginBottom: '0.25rem' }}></Trophy>
+                : <></>
+              }
+              {proposal.description}
+            </Col>
+
+            {VotingWorkflowStatusEnum.VotesTallied === status
+              ? (
+                <Col xs="auto">
+                  {proposal.voteCount}
+                </Col>
+              )
+              : <></>
+            }
+          </Row>
         </ListGroup.Item>
       );
     });

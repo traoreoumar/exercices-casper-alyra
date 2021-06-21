@@ -29,6 +29,10 @@ function Voting(props) {
   useEffect(() => {
   }, [status]);
 
+  const [winningProposalId, setWinningProposalId] = useState(votingInitialData.winningProposalId);
+  useEffect(() => {
+  }, [winningProposalId]);
+
   const [votingContract, setVotingContract] = useState(null);
   useEffect(() => {
     if (votingContract) {
@@ -37,7 +41,8 @@ function Voting(props) {
         setOwner,
         setVotersAddresses,
         setProposals,
-        setStatus
+        setStatus,
+        setWinningProposalId
       );
 
       getVotingContractOwner(votingContract).then((owner) => {
@@ -55,6 +60,13 @@ function Voting(props) {
       getVotingContractStatus(votingContract).then((status) => {
         setStatus(status);
       });
+
+      getVotingContractWinningProposalId(votingContract)
+        .then((winningProposalId) => {
+          setWinningProposalId(winningProposalId);
+        })
+        .catch((error) => {})
+      ;
     }
   }, [votingContract]);
 
@@ -73,6 +85,8 @@ function Voting(props) {
     setProposals,
     status,
     setStatus,
+    winningProposalId,
+    setWinningProposalId,
   }
 
   return (
@@ -112,7 +126,11 @@ function getVotingContractStatus(votingContract) {
   return votingContract.methods.status().call().then(parseInt);
 }
 
-function manageVotingContractEvents(votingContract, setOwner, setVotersAddresses, setProposals, setStatus) {
+function getVotingContractWinningProposalId(votingContract) {
+  return votingContract.methods.getWinningProposalId().call().then(parseInt);
+}
+
+function manageVotingContractEvents(votingContract, setOwner, setVotersAddresses, setProposals, setStatus, setWinningProposalId) {
   votingContract.events.VoterRegistered()
     .on('data', (event) => {
       setVotersAddresses((votersAddresses) => {
@@ -186,6 +204,31 @@ function manageVotingContractEvents(votingContract, setOwner, setVotersAddresses
 
         return proposals;
       });
+    })
+    .on('error', (event) => {
+      console.error(event);
+    })
+  ;
+
+  votingContract.events.Voted()
+    .on('data', async (event) => {
+      getVotingContractProposals(votingContract).then((proposals) => {
+        setProposals(proposals);
+      });
+    })
+    .on('error', (event) => {
+      console.error(event);
+    })
+  ;
+
+  votingContract.events.VotesTallied()
+    .on('data', async (event) => {
+      getVotingContractWinningProposalId(votingContract)
+        .then((winningProposalId) => {
+          setWinningProposalId(winningProposalId);
+        })
+        .catch((error) => {})
+      ;
     })
     .on('error', (event) => {
       console.error(event);

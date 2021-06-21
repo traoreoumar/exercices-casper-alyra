@@ -9,4 +9,6 @@ export const VotingContractContext = React.createContext({
   setProposals: null,
   status: null,
   setStatus: null,
+  winningProposalId: null,
+  setWinningProposalId: null,
 });

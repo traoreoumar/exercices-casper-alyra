@@ -178,7 +178,26 @@ function VotingContent(props) {
 
     case VotingWorkflowStatusEnum.VotesTallied:
       content = (
-        <p>VotesTallied</p>
+        <>
+          <h2>Résultat du vote</h2>
+          <Container>
+            <Row>
+              <Col>
+                <DefaultCard
+                  title='Votants'
+                  content={<VotersList></VotersList>}
+                ></DefaultCard>
+              </Col>
+
+              <Col>
+                <DefaultCard
+                  title='Propositions'
+                  content={<ProposalsList></ProposalsList>}
+                ></DefaultCard>
+              </Col>
+            </Row>
+          </Container>
+        </>
       );
       break;
   
