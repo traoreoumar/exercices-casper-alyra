@@ -39,7 +39,7 @@ function VotersList(props) {
                 <Row>
                   <Col className="my-auto">{addressVoter}</Col>
                   <Col xs="auto">
-                    <Button variant="danger" onClick={(event) => removeVoter(event, addressVoter)}>
+                    <Button size="sm" variant="danger" onClick={(event) => removeVoter(event, addressVoter)}>
                       <Trash></Trash>
                     </Button>
                   </Col>

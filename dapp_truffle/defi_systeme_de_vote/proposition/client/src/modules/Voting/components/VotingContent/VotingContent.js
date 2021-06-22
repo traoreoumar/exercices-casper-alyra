@@ -47,8 +47,8 @@ function VotingContent() {
 
           {isOwner
             ? (
-              <div>
-                <Button className="ml-auto" onClick={(event) => setVotingContractStatus(event, 'openProposalRegistrationSession')}>
+              <div className="voting-content-actions">
+                <Button onClick={(event) => setVotingContractStatus(event, 'openProposalRegistrationSession')}>
                   Fermer la phase d'enregistrement des votants
                 </Button>
               </div>
@@ -74,8 +74,8 @@ function VotingContent() {
 
           {isOwner
             ? (
-              <div>
-                <Button className="ml-auto" onClick={(event) => setVotingContractStatus(event, 'closeProposalRegistrationSession')}>
+              <div className="voting-content-actions">
+                <Button onClick={(event) => setVotingContractStatus(event, 'closeProposalRegistrationSession')}>
                   Fermer la phase d'enregistrement des propositions
                 </Button>
               </div>
@@ -110,8 +110,8 @@ function VotingContent() {
 
           {isOwner
             ? (
-              <div>
-                <Button className="ml-auto" onClick={(event) => setVotingContractStatus(event, 'openVotingSession')}>
+              <div className="voting-content-actions">
+                <Button onClick={(event) => setVotingContractStatus(event, 'openVotingSession')}>
                   Ouvrir la phase de vote
                 </Button>
               </div>
@@ -156,8 +156,8 @@ function VotingContent() {
               </Row>
             </Container>
 
-            <div>
-              <Button className="ml-auto" onClick={(event) => setVotingContractStatus(event, setStatusMethodName)}>
+            <div className="voting-content-actions">
+              <Button onClick={(event) => setVotingContractStatus(event, setStatusMethodName)}>
                 {setStatuslabel}
               </Button>
             </div>

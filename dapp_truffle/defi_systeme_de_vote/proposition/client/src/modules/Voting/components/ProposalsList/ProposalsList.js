@@ -68,7 +68,7 @@ function ProposalsList(props) {
           <Row>
             <Col>
               {proposalId === winningProposalId
-                ? <Trophy className="me-2" style={{ marginBottom: '0.25rem' }}></Trophy>
+                ? <Trophy className="mr-2" style={{ marginBottom: '0.25rem' }}></Trophy>
                 : <></>
               }
               {proposal.description}
