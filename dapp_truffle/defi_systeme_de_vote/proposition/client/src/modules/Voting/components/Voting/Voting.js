@@ -6,6 +6,7 @@ import "./Voting.scss";
 import VotingContent from "../VotingContent/VotingContent";
 import { VotingContractContext } from "../../contexts/voting-contract-context";
 import { Web3Context } from "../../../../contexts/web3-context";
+import { VotingWorkflowStatusEnum } from "../../interfaces/VotingWorkflowStatusEnum";
 
 function Voting(props) {
   // Contexts
@@ -14,25 +15,10 @@ function Voting(props) {
 
   // State & Effect
   const [owner, setOwner] = useState(votingInitialData.owner);
-  useEffect(() => {
-  }, [setOwner]);
-
   const [votersAddresses, setVotersAddresses] = useState(votingInitialData.votersAddresses);
-  useEffect(() => {
-  }, [votersAddresses]);
-
   const [proposals, setProposals] = useState(votingInitialData.proposals);
-  useEffect(() => {
-  }, [proposals]);
-
   const [status, setStatus] = useState(votingInitialData.status);
-  useEffect(() => {
-  }, [status]);
-
   const [winningProposalId, setWinningProposalId] = useState(votingInitialData.winningProposalId);
-  useEffect(() => {
-  }, [winningProposalId]);
-
   const [votingContract, setVotingContract] = useState(null);
   useEffect(() => {
     if (votingContract) {
@@ -59,22 +45,26 @@ function Voting(props) {
 
       getVotingContractStatus(votingContract).then((status) => {
         setStatus(status);
-      });
 
-      getVotingContractWinningProposalId(votingContract)
-        .then((winningProposalId) => {
-          setWinningProposalId(winningProposalId);
-        })
-        .catch((error) => {})
-      ;
+        if (VotingWorkflowStatusEnum.VotesTallied === status) {
+          getVotingContractWinningProposalId(votingContract)
+            .then((winningProposalId) => {
+              setWinningProposalId(winningProposalId);
+            })
+            .catch((error) => {})
+          ;
+        }
+      });
     }
   }, [votingContract]);
 
-  if (!votingContract) {
-    getVotingContract(web3, setVotingContract).then((instance) => {
-      setVotingContract(instance);
-    })
-  }
+  useEffect(() => {
+    if (web3) {
+      getVotingContract(web3).then((instance) => {
+        setVotingContract(instance);
+      })
+    }
+  }, [web3]);
 
   const votingContractContext = {
     votingContract,
@@ -98,7 +88,7 @@ function Voting(props) {
   );
 }
 
-async function getVotingContract(web3, setVotingContract) {
+async function getVotingContract(web3) {
   // Get the contract instance.
   const networkId = await web3.eth.net.getId();
   const deployedNetwork = VotingContract.networks[networkId];

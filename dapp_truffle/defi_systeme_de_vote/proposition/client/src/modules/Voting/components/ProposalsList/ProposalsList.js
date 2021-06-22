@@ -45,7 +45,7 @@ function ProposalsList(props) {
 
   let content = (
     <ListGroup.Item>
-        Aucune proposition entegistrée
+      Aucune proposition entegistrée
     </ListGroup.Item>
   );
 

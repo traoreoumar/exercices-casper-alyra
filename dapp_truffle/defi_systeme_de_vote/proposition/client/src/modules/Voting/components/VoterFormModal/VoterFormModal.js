@@ -27,7 +27,7 @@ function VoterFormModal(props) {
 
         closeNewVoterModal();
       } catch (error) {
-          console.log(error);
+        console.log(error);
       }
   };
 

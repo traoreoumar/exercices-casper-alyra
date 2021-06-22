@@ -12,7 +12,7 @@ import { VotingContractContext } from "../../contexts/voting-contract-context";
 import { Web3Context } from "../../../../contexts/web3-context";
 import { VotingWorkflowStatusEnum } from "../../interfaces/VotingWorkflowStatusEnum";
 
-function VotingContent(props) {
+function VotingContent() {
   // Contexts
   const { accounts } = useContext(Web3Context);
   const { votingContract, owner, votersAddresses, status } = useContext(VotingContractContext);
@@ -23,7 +23,7 @@ function VotingContent(props) {
     && votersAddresses.map((voterAddress) => voterAddress.toUpperCase()).includes(accounts[0].toUpperCase())
   ;
 
-  const setStatus = (event, methodName) => {
+  const setVotingContractStatus = (event, methodName) => {
     event.preventDefault();
     event.stopPropagation();
 
@@ -48,7 +48,7 @@ function VotingContent(props) {
           {isOwner
             ? (
               <div>
-                <Button className="ml-auto" onClick={(event) => setStatus(event, 'openProposalRegistrationSession')}>
+                <Button className="ml-auto" onClick={(event) => setVotingContractStatus(event, 'openProposalRegistrationSession')}>
                   Fermer la phase d'enregistrement des votants
                 </Button>
               </div>
@@ -75,7 +75,7 @@ function VotingContent(props) {
           {isOwner
             ? (
               <div>
-                <Button className="ml-auto" onClick={(event) => setStatus(event, 'closeProposalRegistrationSession')}>
+                <Button className="ml-auto" onClick={(event) => setVotingContractStatus(event, 'closeProposalRegistrationSession')}>
                   Fermer la phase d'enregistrement des propositions
                 </Button>
               </div>
@@ -111,7 +111,7 @@ function VotingContent(props) {
           {isOwner
             ? (
               <div>
-                <Button className="ml-auto" onClick={(event) => setStatus(event, 'openVotingSession')}>
+                <Button className="ml-auto" onClick={(event) => setVotingContractStatus(event, 'openVotingSession')}>
                   Ouvrir la phase de vote
                 </Button>
               </div>
@@ -157,7 +157,7 @@ function VotingContent(props) {
             </Container>
 
             <div>
-              <Button className="ml-auto" onClick={(event) => setStatus(event, setStatusMethodName)}>
+              <Button className="ml-auto" onClick={(event) => setVotingContractStatus(event, setStatusMethodName)}>
                 {setStatuslabel}
               </Button>
             </div>
