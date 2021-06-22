@@ -49,7 +49,7 @@ function VotingContent() {
             ? (
               <div className="voting-content-actions">
                 <Button onClick={(event) => setVotingContractStatus(event, 'openProposalRegistrationSession')}>
-                  Fermer la phase d'enregistrement des votants
+                  Fermer la session d'enregistrement des votants
                 </Button>
               </div>
             )
@@ -76,7 +76,7 @@ function VotingContent() {
             ? (
               <div className="voting-content-actions">
                 <Button onClick={(event) => setVotingContractStatus(event, 'closeProposalRegistrationSession')}>
-                  Fermer la phase d'enregistrement des propositions
+                  Fermer la session d'enregistrement des propositions
                 </Button>
               </div>
             )
@@ -112,7 +112,7 @@ function VotingContent() {
             ? (
               <div className="voting-content-actions">
                 <Button onClick={(event) => setVotingContractStatus(event, 'openVotingSession')}>
-                  Ouvrir la phase de vote
+                  Ouvrir la session de vote
                 </Button>
               </div>
             )
@@ -125,7 +125,7 @@ function VotingContent() {
     case VotingWorkflowStatusEnum.VotingSessionStarted:
     case VotingWorkflowStatusEnum.VotingSessionEnded:
       let title = 'Période de vote';
-      let setStatuslabel = 'Fermer la phase de vote';
+      let setStatuslabel = 'Fermer la session de vote';
       let setStatusMethodName = 'closeVotingSession';
 
       if (VotingWorkflowStatusEnum.VotingSessionEnded === status) {
