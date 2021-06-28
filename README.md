@@ -36,3 +36,4 @@
 
 - [TDD ERC20](integration_et_livraison_continues/tdd_erc20)
 - [Déploiement Simple Storage](integration_et_livraison_continues/deploiement_simple_storage)
+- [⚡️ Suite Défi : Système de vote](integration_et_livraison_continues/defi_systeme_de_vote)
