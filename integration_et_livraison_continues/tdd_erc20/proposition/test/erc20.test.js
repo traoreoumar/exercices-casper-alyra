@@ -53,13 +53,10 @@ contract('ERC20Token', function (accounts) {
       this.approveResult = await this.ERC20Instance.approve(recipient, amount, { from: owner });
     });
 
-    it('augmente le montant autorisé', async function () {
-      let amount = new BN(10);
-  
-      await this.ERC20Instance.approve(recipient, amount, {from: owner});
+    it('modifie le montant autorisé', async function () {
       let allowanceAmountAfter = await this.ERC20Instance.allowance(owner, recipient);
   
-      expect(allowanceAmountAfter).to.be.bignumber.equal(this.allowanceAmountBeforeApprove.add(amount));
+      expect(allowanceAmountAfter).to.be.bignumber.equal(amount);
     });
 
     it('l\'événement "Approval" est emit', async function () {
