@@ -1,5 +1,8 @@
 # ⚡️ Suite défi - Système de vote 2
 
+- [Lien du projet](https://github.com/traoreoumar/exercices-casper-alyra/tree/main/dapp_truffle/defi_systeme_de_vote/proposition)
+- [Fichier de test](https://github.com/traoreoumar/exercices-casper-alyra/blob/main/dapp_truffle/defi_systeme_de_vote/proposition/test/voting.test.js)
+
 ## Tests
 
 ![Tests](tests.gif)
