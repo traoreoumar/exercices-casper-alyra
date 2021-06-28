@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "@openzeppelin/contracts": "3.4.0",
-    "@openzeppelin/test-helpers": "^0.5.11"
+    "@openzeppelin/test-helpers": "^0.5.11",
+    "@truffle/hdwallet-provider": "^1.4.1",
+    "dotenv": "^10.0.0"
   }
 }
