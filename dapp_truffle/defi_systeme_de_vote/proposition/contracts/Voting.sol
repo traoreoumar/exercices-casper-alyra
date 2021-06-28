@@ -159,7 +159,7 @@ contract Voting is Ownable {
     function vote(uint _proposalId) external onlyVoter {
         require(status == WorkflowStatus.VotingSessionStarted, "Voting session is not started");
         require(!voters[msg.sender].hasVoted, "Voter already vote");
-        require(0 < bytes(proposals[_proposalId].description).length, "Proposal not exists");
+        require(_proposalId < proposals.length, "Proposal not exists");
 
         voters[msg.sender].hasVoted = true;
         voters[msg.sender].votedProposalId = _proposalId;
