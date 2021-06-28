@@ -140,3 +140,8 @@ Dans ce test,
 - ```owner``` compte les vote
 
 À la fin, on vérifie que c'est la bonne proposition qui a gagné avec le bon nombre de vote.
+
+## Déploiement
+
+- [Heroku](https://stormy-headland-45377.herokuapp.com/)
+- [GitHub Pages](https://traoreoumar.github.io/exercices-casper-alyra/defi_voting/)
