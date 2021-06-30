@@ -1,5 +1,4 @@
 {
-  "homepage": "https://traoreoumar.github.io/exercices-casper-alyra/defi_voting/",
   "dependencies": {
     "@openzeppelin/contracts": "3.4.0",
     "@openzeppelin/test-helpers": "^0.5.11",
