@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/exercices-casper-alyra/defi_voting/static/css/main.c2b28257.chunk.css",
+    "main.js": "/exercices-casper-alyra/defi_voting/static/js/main.ed004404.chunk.js",
+    "main.js.map": "/exercices-casper-alyra/defi_voting/static/js/main.ed004404.chunk.js.map",
+    "runtime-main.js": "/exercices-casper-alyra/defi_voting/static/js/runtime-main.22781844.js",
+    "runtime-main.js.map": "/exercices-casper-alyra/defi_voting/static/js/runtime-main.22781844.js.map",
+    "static/js/2.6e8de9b5.chunk.js": "/exercices-casper-alyra/defi_voting/static/js/2.6e8de9b5.chunk.js",
+    "static/js/2.6e8de9b5.chunk.js.map": "/exercices-casper-alyra/defi_voting/static/js/2.6e8de9b5.chunk.js.map",
+    "index.html": "/exercices-casper-alyra/defi_voting/index.html",
+    "precache-manifest.94a2bad837d7e896860729cd7ec4d86f.js": "/exercices-casper-alyra/defi_voting/precache-manifest.94a2bad837d7e896860729cd7ec4d86f.js",
+    "service-worker.js": "/exercices-casper-alyra/defi_voting/service-worker.js",
+    "static/css/main.c2b28257.chunk.css.map": "/exercices-casper-alyra/defi_voting/static/css/main.c2b28257.chunk.css.map"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.22781844.js",
+    "static/js/2.6e8de9b5.chunk.js",
+    "static/css/main.c2b28257.chunk.css",
+    "static/js/main.ed004404.chunk.js"
+  ]
+}
